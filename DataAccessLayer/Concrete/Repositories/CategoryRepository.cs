@@ -14,6 +14,12 @@ namespace DataAccessLayer.Concrete.Repositories
     {
         Context c = new Context();
         DbSet<Category> _object;
+
+        public CategoryRepository()
+        {
+            _object = c.Categories;
+        }
+
         public void Delete(Category p)
         {
             _object.Remove(p);

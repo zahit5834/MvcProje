@@ -27,6 +27,10 @@ namespace BussinessLayer.Concrete
             return _headingDal.List();
         }
 
+        public List<Heading> GetListByWriter()
+        {
+            return _headingDal.List(x => x.WriterId == 4);
+        }
         public void HeadingAdd(Heading heading)
         {
             _headingDal.Insert(heading);
@@ -34,7 +38,9 @@ namespace BussinessLayer.Concrete
 
         public void HeadingDelete(Heading heading)
         {
-            _headingDal.Delete(heading);
+            heading.HeadingStatus = false;
+            _headingDal.Update(heading);
+            //_headingDal.Delete(heading);
         }
 
         public void HeadingUpdate(Heading heading)

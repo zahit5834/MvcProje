@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BussinessLayer.Concrete
 {
-    public class ContentManager : IContentServices
+    public class ContentManager : IContentService
     {
         IContentDal _ContentDal;
 
@@ -48,9 +48,14 @@ namespace BussinessLayer.Concrete
             throw new NotImplementedException();
         }
 
-        public List<Content> GetListById(int id)
+        public List<Content> GetListByHeadingId(int id)
         {
-            return _ContentDal.List(x => x.ContentId == id);
+            return _ContentDal.List(x => x.HeadingID == id);
+        }
+
+        public List<Content> GetListByWriter()
+        {
+            return _ContentDal.List(x => x.WriterId == 4);
         }
     }
 }
