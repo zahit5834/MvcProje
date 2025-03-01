@@ -14,13 +14,16 @@ namespace MvcProje.Controllers
         // GET: WriterPanel
         HeadingManager hm = new HeadingManager(new EfHeadingDal());
         CategoryManager cm = new CategoryManager(new EfCategoryDal());
+        WriterManager wm = new WriterManager(new EfWriterDal());
         public ActionResult WriterProfile()
         {
             return View();
         }
         public ActionResult MyHeading()
         {
-            var values = hm.GetListByWriter();
+            var t = (Writer)Session["writerUserInfo"];
+            int id = t.WriterId;
+            var values = hm.GetListByWriter(id);
             return View(values);
         }
         [HttpGet]
@@ -40,8 +43,9 @@ namespace MvcProje.Controllers
         [HttpPost]
         public ActionResult NewHeading(Heading p)
         {
+            var t = (Writer)Session["writerUserInfo"];
             p.HeadingDate = DateTime.Parse(DateTime.Now.ToShortDateString());
-            p.WriterId = 4;
+            p.WriterId = t.WriterId;
             p.HeadingStatus = true;
             hm.HeadingAdd(p);
             return RedirectToAction("MyHeading");

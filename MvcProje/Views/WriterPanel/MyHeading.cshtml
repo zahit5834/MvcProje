@@ -5,7 +5,8 @@
     Layout = "~/Views/Shared/_WriterLayout.cshtml";
 }
 @{
-    string color = "";
+    string color = "success";
+    int i = 0;
 }
 <!DOCTYPE html>
 <html>
@@ -53,6 +54,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
+                            i++;
                             if (item.Category.CategoryName == "Eğitim")
                             {
                                 color = "danger";
@@ -85,10 +87,13 @@
                             {
                                 color = "warning";
                             }
-
+                            if (item.Category.CategoryName == "Sağlık")
+                            {
+                                color = "success";
+                            }
                             <tr>
                                 <td>
-                                    @item.HeadingId
+                                    @i
                                 </td>
                                 <td>
                                     <a>

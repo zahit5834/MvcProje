@@ -25,6 +25,11 @@ namespace BussinessLayer.Concrete
             return _writerDal.Get(x => x.WriterId == id);
         }
 
+        public Writer GetByMail(string p)
+        {
+            return _writerDal.Get(x => x.WriterMail == p);
+        }
+
         public List<Writer> GetList()
         {
             return _writerDal.List();

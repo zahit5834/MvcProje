@@ -11,6 +11,7 @@ using System.Web.Security;
 
 namespace MvcProje.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : Controller
     {
         AdminManager am = new AdminManager(new EfAdminDal());
@@ -24,7 +25,7 @@ namespace MvcProje.Controllers
         public ActionResult Index(Admin p)
         {
             var adminUserInfo = am.GetAdmin(p);
-            if (adminUserInfo != null && adminUserInfo.Count >0)
+            if (adminUserInfo != null && adminUserInfo.Count > 0)
             {
                 FormsAuthentication.SetAuthCookie(adminUserInfo[0].AdminUserName, false);
                 Session["AdminUserName"] = adminUserInfo[0].AdminUserName;
@@ -47,13 +48,18 @@ namespace MvcProje.Controllers
             if (writerUserInfo != null && writerUserInfo.Count > 0)
             {
                 FormsAuthentication.SetAuthCookie(writerUserInfo[0].WriterMail, false);
-                Session["WriterMail"] = writerUserInfo[0].WriterMail;
+                Session["writerUserInfo"] = writerUserInfo[0];
                 return RedirectToAction("MyContent", "WriterPanelContent");
             }
             else
             {
                 return RedirectToAction("WriterLogin");
             }
+        }
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("WriterLogin", "Login");
         }
     }
 }
