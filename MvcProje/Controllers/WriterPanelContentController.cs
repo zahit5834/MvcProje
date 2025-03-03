@@ -21,5 +21,25 @@ namespace MvcProje.Controllers
             var contentValues = cm.GetListByWriter(id);
             return View(contentValues);
         }
+        [HttpGet]
+        public ActionResult AddContent(int id)
+        {
+            ViewBag.d = id;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AddContent(Content p)
+        {
+            var t = (Writer)Session["writerUserInfo"];
+            p.ContentDate = DateTime.Parse(DateTime.Now.ToShortDateString());
+            p.WriterId = t.WriterId;
+            p.ContentStatus = true;
+            cm.ContentAdd(p);
+            return RedirectToAction("MyContent");
+        }
+        public ActionResult ToDoList()
+        {
+            return View();
+        }
     }
 }

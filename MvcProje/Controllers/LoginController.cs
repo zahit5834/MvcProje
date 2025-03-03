@@ -16,6 +16,7 @@ namespace MvcProje.Controllers
     {
         AdminManager am = new AdminManager(new EfAdminDal());
         WriterManager wm = new WriterManager(new EfWriterDal());
+        WriterLoginManager wlm = new WriterLoginManager(new EfWriterDal());
         [HttpGet]
         public ActionResult Index()
         {
@@ -44,11 +45,11 @@ namespace MvcProje.Controllers
         [HttpPost]
         public ActionResult WriterLogin(Writer p)
         {
-            var writerUserInfo = wm.GetWriter(p);
-            if (writerUserInfo != null && writerUserInfo.Count > 0)
+            var writerUserInfo = wlm.GetWriter(p.WriterMail, p.WriterPassword);
+            if (writerUserInfo != null)
             {
-                FormsAuthentication.SetAuthCookie(writerUserInfo[0].WriterMail, false);
-                Session["writerUserInfo"] = writerUserInfo[0];
+                FormsAuthentication.SetAuthCookie(writerUserInfo.WriterMail, false);
+                Session["writerUserInfo"] = writerUserInfo;
                 return RedirectToAction("MyContent", "WriterPanelContent");
             }
             else
@@ -59,7 +60,8 @@ namespace MvcProje.Controllers
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("WriterLogin", "Login");
+            Session.Abandon();
+            return RedirectToAction("Headings", "Default");
         }
     }
 }

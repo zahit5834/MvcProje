@@ -18,12 +18,14 @@ namespace MvcProje.Controllers
         MessageValidator messageValidator = new MessageValidator();
         public ActionResult Inbox()
         {
-            var messageList= mm.GetListInbox();
+            var p = (Writer)Session["WriterUserInfo"];
+            var messageList= mm.GetListInbox(p.WriterMail);
             return View(messageList);
         }
         public ActionResult Sendbox()
         {
-            var messageList = mm.GetListSentBox();
+            var p = (Writer)Session["WriterUserInfo"];
+            var messageList = mm.GetListSentBox(p.WriterMail);
             return View(messageList);
         }
         [HttpGet]

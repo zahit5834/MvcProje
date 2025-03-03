@@ -6,6 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
+using PagedList.Mvc;
+using BussinessLayer.ValidationRules;
+using FluentValidation.Results;
+using BCrypt.Net;
 
 namespace MvcProje.Controllers
 {
@@ -15,8 +20,31 @@ namespace MvcProje.Controllers
         HeadingManager hm = new HeadingManager(new EfHeadingDal());
         CategoryManager cm = new CategoryManager(new EfCategoryDal());
         WriterManager wm = new WriterManager(new EfWriterDal());
+        WriterValidator writerValidator = new WriterValidator();
+        [HttpGet]
         public ActionResult WriterProfile()
         {
+            var t = (Writer)Session["writerUserInfo"];
+            var writervalue = wm.GetById(t.WriterId);
+            return View(writervalue);
+        }
+        [HttpPost]
+        public ActionResult WriterProfile(Writer p)
+        {
+            ValidationResult results = writerValidator.Validate(p);
+            if (results.IsValid)
+            {
+                p.WriterPassword = BCrypt.Net.BCrypt.HashPassword(p.WriterPassword);
+                wm.WriterUpdate(p);
+                return RedirectToAction("AllHeading","WriterPanel");
+            }
+            else
+            {
+                foreach (var item in results.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+            }
             return View();
         }
         public ActionResult MyHeading()
@@ -77,6 +105,12 @@ namespace MvcProje.Controllers
             var headingvalue = hm.GetById(id);
             hm.HeadingDelete(headingvalue);
             return RedirectToAction("MyHeading");
+        }
+        public ActionResult AllHeading(int p = 1)
+        {
+
+            var headings = hm.GetList().ToPagedList(p, 5);
+            return View(headings);
         }
 
     }

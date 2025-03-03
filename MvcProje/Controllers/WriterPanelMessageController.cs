@@ -18,12 +18,14 @@ namespace MvcProje.Controllers
         MessageValidator messageValidator = new MessageValidator();
         public ActionResult Inbox()
         {
-            var messageList = mm.GetListInbox();
+            var p = (Writer)Session["WriterUserInfo"];
+            var messageList = mm.GetListInbox(p.WriterMail);
             return View(messageList);
         }
         public ActionResult Sendbox()
         {
-            var messageList = mm.GetListSentBox();
+            var p = (Writer)Session["WriterUserInfo"];
+            var messageList = mm.GetListSentBox(p.WriterMail);
             return View(messageList);
         }
         [HttpGet]
@@ -37,8 +39,9 @@ namespace MvcProje.Controllers
             ValidationResult result = messageValidator.Validate(p);
             if (result.IsValid)
             {
+                var t = (Writer)Session["WriterUserInfo"];
                 p.MessageDate = DateTime.Parse(DateTime.Now.ToString());
-                p.SenderMail = "defne@gmail.com";
+                p.SenderMail = t.WriterMail;
                 mm.MessageAdd(p);
                 return RedirectToAction("Sendbox");
             }

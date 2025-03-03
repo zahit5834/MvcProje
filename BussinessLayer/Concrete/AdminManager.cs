@@ -21,6 +21,7 @@ namespace BussinessLayer.Concrete
 
         public void AdminAdd(Admin admin)
         {
+            admin.AdminPassword = BCrypt.Net.BCrypt.HashPassword(admin.AdminPassword);
             _adminDal.Insert(admin);
         }
 

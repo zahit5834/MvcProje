@@ -16,5 +16,9 @@ namespace MvcProje.Controllers
             ViewBag.YazarSayisi = 2;
             return View();
         }
+        public ActionResult Test()
+        {
+            return View();
+        }
     }
 }

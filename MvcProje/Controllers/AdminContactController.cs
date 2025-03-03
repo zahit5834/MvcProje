@@ -1,6 +1,7 @@
 ﻿using BussinessLayer.Concrete;
 using BussinessLayer.ValidationRules;
 using DataAccessLayer.EntityFramework;
+using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +28,9 @@ namespace MvcProje.Controllers
         }
         public PartialViewResult MessageListMenu()
         {
-            ViewBag.Sc = mm.GetListSentBox().Count();
-            ViewBag.Ic = mm.GetListInbox().Count();
+            var p = (Writer)Session["WriterUserInfo"];
+            ViewBag.Sc = mm.GetListSentBox(p.WriterMail).Count();
+            ViewBag.Ic = mm.GetListInbox(p.WriterMail).Count();
             ViewBag.cc = cm.GetList().Count();
             return PartialView();
         }
